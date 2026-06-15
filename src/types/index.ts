@@ -23,15 +23,16 @@ export interface Batch {
   riceType: string;
   riceWeight: number;
   status: BatchStatus;
-  currentStage: StageName;
+  currentStage: string;
   createdAt: string;
+  operator?: string;
   soaking?: SoakingRecord;
   steaming?: SteamingRecord;
   fermentation?: FermentationRecord;
   aging?: AgingRecord;
   pressing?: PressingRecord;
   cellar?: CellarRecord;
-  sale?: SaleRecord;
+  saleRecords?: SaleRecord[];
 }
 
 export interface SoakingRecord {
@@ -121,7 +122,8 @@ export interface CellarRecord {
   location: string;
   cellarDate: string;
   capacity: number;
-  status: 'stored' | 'aging' | 'ready' | 'sold';
+  remainingCapacity: number;
+  status: 'stored' | 'aging' | 'ready' | 'partial' | 'sold';
   notes?: string;
 }
 
@@ -130,9 +132,21 @@ export interface SaleRecord {
   customer: string;
   quantity: number;
   price: number;
+  totalAmount: number;
   saleDate: string;
   operator: string;
   notes?: string;
+}
+
+export interface AlertItem {
+  id: string;
+  type: 'soaking_timeout' | 'ferment_temp' | 'stock_low' | 'aging_overdue';
+  level: 'warning' | 'danger';
+  title: string;
+  message: string;
+  batchId?: string;
+  batchNo?: string;
+  timestamp: string;
 }
 
 export interface StatsCardData {
